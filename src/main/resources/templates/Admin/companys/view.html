@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${company.name + ' Dashboard'}">Company
+	Dashboard</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<style>
+.chart-container {
+	position: relative;
+	height: 300px;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.card {
+	margin-bottom: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+	background-color: #f8f9fa;
+	border-bottom: 1px solid #eee;
+}
+
+.stat-card {
+	transition: transform 0.3s;
+}
+
+.stat-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+	position: relative;
+	height: 300px;
+	width: 100%;
+}
+
+.barcode-container {
+	background: white;
+	padding: 15px;
+	border-radius: 5px;
+	display: inline-block;
+}
+</style>
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="/css/dashboard.css">
+
+</head>
+<body>
+	<div class="app-container">
+		<!-- Sidebar -->
+		<aside class="sidebar">
+			<div class="logo">
+				<i class="fas fa-microchip"></i>
+				<!-- For technology -->
+				<div class="logo-text">
+					<h1>My Code</h1>
+					<p>The Best Tech Startup</p>
+				</div>
+			</div>
+			<ul class="nav-menu">
+				<li><a href="#" class="active"> <i
+						class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+				</a></li>
+				<li><a href="/admin/company/users/new"> <i
+						class="fas fa-user-plus"></i> <span>Add Sub-Admin</span>
+				</a></li>
+				<li><a href="/admin/company/users/view"> <i
+						class="fas fa-users-cog"></i> <span>View Sub-Admin</span>
+				</a></li>
+				<li><a
+					th:href="@{/admin/companies/{id}/transactions/new(id=${company.id})}">
+						<i class="fas fa-plus-circle"></i> <span>Add Transaction</span>
+				</a></li>
+				<li><a
+					th:href="@{/admin/companies/{id}/transactions/list(id=${company.id})}">
+						<i class="fas fa-list-alt"></i> <span>View Transaction</span>
+				</a></li>
+				<li><a href="/admin/dashboard"> <i class="fas fa-home"></i>
+						<span>Go To Main Page</span>
+				</a></li>
+			</ul>
+
+		</aside>
+
+		<!-- Main Content -->
+		<main class="main-content">
+			<header class="header">
+				<h2>Dashboard</h2>
+				<div class="user-profile">
+					<span>Welcome to , [[${company.name}]]</span>
+				</div>
+			</header>
+
+			<!-- Stats Cards -->
+			<section class="stats-container">
+				<article class="stat-card">
+					<h3>Total Transactions</h3>
+					<p class="card-text h4 value"
+						th:text="${'रु . ' + #numbers.formatDecimal(totalAmount, 1, 2)}">$0.00</p>
+					<p class="card-text" th:text="${totalCount + ' transactions'}">0
+						transactions</p>
+
+				</article>
+				<article class="stat-card">
+					<h3>Today's Transactions</h3>
+					<p class="card-text h4 value"
+						th:text="${'रु . ' + #numbers.formatDecimal(todayAmount, 1, 2)}">$0.00</p>
+					<p class="card-text" th:text="${todayCount + ' transactions'}">0
+						transactions</p>
+
+				</article>
+				<article class="stat-card">
+					<h3>This Month's Transactions</h3>
+					<p class="card-text h4 value"
+						th:text="${'रु . ' + #numbers.formatDecimal(monthAmount, 1, 2)}">$0.00</p>
+					<p class="card-text" th:text="${monthCount + ' transactions'}">0
+						transactions</p>
+
+				</article>
+			</section>
+
+			<!-- Recent Activity -->
+			<section class="recent-activity">
+				<h3>Transaction Trends (Last 30 Days)</h3>
+				<div class="table-responsive">
+					<div class="chart-container"
+						style="position: relative; height: 400px; width: 100%">
+						<canvas id="transactionTrendChart"></canvas>
+					</div>
+				</div>
+			</section>
+
+			<section class="recent-activity">
+				<h3>Transaction Trends (Last 1 Year)</h3>
+				<!-- Charts and Barcode Row -->
+				<div class="card">
+					<div class="card-header">
+						<h3>Monthly Transaction Trends</h3>
+					</div>
+					<div class="card-body">
+						<div class="chart-container">
+							<canvas id="monthlyChart"></canvas>
+						</div>
+					</div>
+				</div>
+
+			</section>
+
+			<section class="recent-activity">
+				<div class="card">
+					<div class="card-header">
+						<h3>Recent Transactions</h3>
+					</div>
+					<div class="card-body">
+						<table class="table table-striped"
+							th:if="${not #lists.isEmpty(recentTransactions)}">
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Description</th>
+									<th>Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="transaction : ${recentTransactions}">
+									<td
+										th:text="${#temporals.format(transaction.date, 'yyyy-MM-dd')}"></td>
+									<td th:text="${transaction.description}"></td>
+									<td
+										th:text="${'$' + #numbers.formatDecimal(transaction.amount, 1, 2)}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<p th:if="${#lists.isEmpty(recentTransactions)}"
+							class="text-muted">No recent transactions</p>
+					</div>
+				</div>
+
+			</section>
+
+
+
+
+
+
+
+
+		</main>
+	</div>
+	<script type="js/main.js"></script>
+
+	<!-- Add this to your existing JavaScript -->
+	<script th:inline="javascript">
+/*<![CDATA[*/
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the canvas element
+    const ctx = document.getElementById('transactionTrendChart');
+    
+    // Get data from Thymeleaf
+    const labels = /*[[${lineChartLabels}]]*/ [];
+    const values = /*[[${lineChartValues}]]*/ [];
+    
+    console.log("Chart Data Received:", {labels, values});
+    
+    if (ctx && labels.length > 0 && values.length > 0) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Daily Transactions (रु . )',
+                    data: values,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'रु . ' + context.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return 'रु . ' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        console.error("Chart initialization failed - missing data or canvas element");
+        if (ctx) {
+            ctx.parentElement.innerHTML = '<p class="text-muted">No transaction data available</p>';
+        }
+    }
+});
+/*]]>*/
+</script>
+
+	<script>
+    // Monthly Transaction Chart
+    document.addEventListener('DOMContentLoaded', function() {
+        const monthlyCtx = document.getElementById('monthlyChart');
+        
+        // Parse the JSON data
+        const monthlyLabels = JSON.parse('[(${monthlyLabels})]');
+        const monthlyValues = JSON.parse('[(${monthlyValues})]');
+        
+        // Only create chart if we have data
+        if (monthlyLabels.length > 0 && monthlyValues.length > 0) {
+            new Chart(monthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyLabels,
+                    datasets: [{
+                        label: 'Transaction Amount (रु . )',
+                        data: monthlyValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'रु . ' + value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'रु . ' + context.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            monthlyCtx.parentElement.innerHTML = 
+                '<p class="text-muted text-center py-4">No transaction data available for chart</p>';
+        }
+    });
+
+    // Barcode generation
+    document.addEventListener('DOMContentLoaded', function() {
+        JsBarcode("#barcode", '[(${barcodeData})]', {
+            format: "CODE128",
+            lineColor: "#000",
+            width: 2,
+            height: 50,
+            displayValue: true
+        });
+    });
+</script>
+</body>
+</html>

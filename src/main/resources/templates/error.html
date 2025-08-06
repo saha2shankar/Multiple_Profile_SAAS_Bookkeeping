@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error | Your Application</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2a4365;
+            --error-color: #e53e3e;
+            --warning-color: #dd6b20;
+            --light-gray: #f7fafc;
+            --medium-gray: #e2e8f0;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+            color: #2d3748;
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .error-container {
+            max-width: 580px;
+            margin: auto;
+            padding: 2rem;
+            text-align: center;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--error-color);
+        }
+
+        .error-code {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .error-message {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .error-description {
+            color: #4a5568;
+            margin-bottom: 2rem;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .error-details {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            text-align: left;
+            color: #495057;
+            display: none; /* Hidden by default */
+        }
+
+        .error-action {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.875rem 1.75rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #1e365b;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8fafc;
+            border-color: var(--primary-color);
+        }
+
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 1.5rem;
+            text-align: center;
+            color: #718096;
+            font-size: 0.875rem;
+        }
+
+        .toggle-details {
+            color: var(--primary-color);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        @media (max-width: 640px) {
+            .error-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .error-code {
+                font-size: 2.5rem;
+            }
+            
+            .error-message {
+                font-size: 1.5rem;
+            }
+            
+            .error-action {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="error-code" th:text="${status} ?: 'Error'">500</div>
+        <h1 class="error-message" th:text="${error} ?: 'Something went wrong'">Internal Server Error</h1>
+        <p class="error-description" th:text="${message} ?: 'We encountered an unexpected error while processing your request.'">
+            We're sorry, but something went wrong on our end. Our team has been notified.
+        </p>
+        
+        <a class="toggle-details" onclick="toggleErrorDetails()">Show technical details</a>
+        <div class="error-details" id="errorDetails">
+            <div th:if="${timestamp}"><strong>Timestamp:</strong> <span th:text="${timestamp}"></span></div>
+            <div th:if="${path}"><strong>Path:</strong> <span th:text="${path}"></span></div>
+            <div th:if="${exception}"><strong>Exception:</strong> <span th:text="${exception}"></span></div>
+            <div th:if="${trace}"><strong>Trace:</strong> <pre th:text="${trace}"></pre></div>
+        </div>
+        
+        <div class="error-action">
+            <a th:href="@{/}" class="btn">
+                <i class="fas fa-home"></i> Return Home
+            </a>
+            <a th:href="@{/contact}" class="btn btn-outline">
+                <i class="fas fa-envelope"></i> Contact Support
+            </a>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2023</span> Your Company Name
+    </footer>
+
+    <script>
+        function toggleErrorDetails() {
+            const details = document.getElementById('errorDetails');
+            const toggle = document.querySelector('.toggle-details');
+            
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+                toggle.textContent = 'Show technical details';
+            } else {
+                details.style.display = 'block';
+                toggle.textContent = 'Hide technical details';
+            }
+        }
+    </script>
+</body>
+</html>

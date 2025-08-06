@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Bank Limited - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link rel="stylesheet" href="/css/dashboard.css">
+    
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+				<th:block th:insert="fragments/sidebar.html"></th:block>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h2>Dashboard</h2>
+                <div class="user-profile">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User">
+                    <span>Admin User</span>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <section class="stats-container">
+                <article class="stat-card">
+                    <h3>Total Deposits</h3>
+                    <div class="value">Rs. 1,600,000</div>
+                </article>
+                <article class="stat-card">
+                    <h3>Loan-Eligible Customers</h3>
+                    <div class="value">2,400</div>
+                </article>
+                <article class="stat-card">
+                    <h3>Total Customers</h3>
+                    <div class="value">13,000</div>
+                </article>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Transaction ID</th>
+                                <th>Provident Fund %</th>
+                                <th>Notes</th>
+                                <th>Deposit Date</th>
+                                <th>Amount</th>
+                                <th>Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Harithanker Sah</td>
+                                <td>#12548796</td>
+                                <td>10%</td>
+                                <td>Salary...</td>
+                                <td>28 Jan, 12:30 AM</td>
+                                <td>Rs. 50,000</td>
+                                <td><a href="#" class="download-btn">Download</a></td>
+                            </tr>
+                            <tr>
+                                <td>Sariyer Kerk</td>
+                                <td>#12548796</td>
+                                <td>9.8%</td>
+                                <td>This...</td>
+                                <td>25 Jan, 10:40 PM</td>
+                                <td>Rs. 40,332</td>
+                                <td><a href="#" class="download-btn">Download</a></td>
+                            </tr>
+                            <tr>
+                                <td>Mohan Yadav</td>
+                                <td>#12548796</td>
+                                <td>10%</td>
+                                <td>Deposit...</td>
+                                <td>20 Jan, 10:40 PM</td>
+                                <td>Rs. 22,322</td>
+                                <td><a href="#" class="download-btn">Download</a></td>
+                            </tr>
+                            <tr>
+                                <td>Rishine Sharma</td>
+                                <td>#12548796</td>
+                                <td>9.8%</td>
+                                <td>Dad...</td>
+                                <td>15 Jan, 03:29 PM</td>
+                                <td>Rs. 33,234</td>
+                                <td><a href="#" class="download-btn">Download</a></td>
+                            </tr>
+                            <tr>
+                                <td>Kaikita Mandal</td>
+                                <td>#12548796</td>
+                                <td>10%</td>
+                                <td>Months...</td>
+                                <td>14 Jan, 10:40 PM</td>
+                                <td>Rs. 21,434</td>
+                                <td><a href="#" class="download-btn">Download</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary">Record New Deposit</button>
+                <button class="btn btn-secondary">Previous</button>
+            </div>
+        </main>
+    </div>
+<script type="js/main.js"></script>
+</body>
+</html>
