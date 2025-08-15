@@ -56,6 +56,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
     );
+    
+    // Sum of all amounts
+    @Query("SELECT SUM(t.amount) FROM Transaction t")
+    Double getTotalAmount();
+    
+    @Query("SELECT t FROM Transaction t ORDER BY t.date DESC, t.id DESC")
+    List<Transaction> findRecentTransaction(Pageable pageable);
+
 
 
 }

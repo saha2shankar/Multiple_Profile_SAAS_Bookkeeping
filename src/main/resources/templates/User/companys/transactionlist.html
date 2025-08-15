@@ -14,7 +14,7 @@
 </head>
 <body>
 	<div class="app-container">
-		<!-- Sidebar -->
+	<!-- Sidebar -->
 		<aside class="sidebar">
 			<div class="logo">
 				<i class="fas fa-microchip"></i>
@@ -25,26 +25,33 @@
 				</div>
 			</div>
 			<ul class="nav-menu">
-				<li><a th:href="@{/admin/company/dashboard/{id}(id=${company.id})}"> <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+				<li><a th:href="@{/company/dashboard/{id}(id=${company.id})}"
+> <i
+						class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
 				</a></li>
-	<li><a th:href="@{/admin/companies/{id}/company-user(id=${company.id})}"> <i
-						class="fas fa-user-plus"></i> <span>Add User</span>
-				</a></li>
-				<li><a th:href="@{/admin/companies/{id}/company-user-list(id=${company.id})}"> <i
-						class="fas fa-users-cog"></i> <span>View User</span>
+				<li th:unless="${user.role == 'ROLE_USER'}"><a
+					th:href="@{/company/{companyId}/company-user(companyId=${company.id})}">
+						<i class="fas fa-user-plus"></i> <span>Add Sub-Admin</span>
 				</a></li>
 				<li><a
-					th:href="@{/admin/companies/{id}/transactions/new(id=${company.id})}">
+					th:href="@{/company/{companyId}/company-user-list(companyId=${company.id})}"
+					href="/company/company-user-list"
+					th:unless="${user.role == 'ROLE_USER'}"> <i
+						class="fas fa-users-cog"></i> <span>View Sub-Admin</span>
+				</a></li>
+				<li><a
+					th:href="@{/company/{id}/transactions/new(id=${company.id})}">
 						<i class="fas fa-plus-circle"></i> <span>Add Transaction</span>
 				</a></li>
-				<li><a
-					th:href="@{/admin/companies/{id}/transactions/list(id=${company.id})}"
-					class="active"> <i class="fas fa-list-alt"></i> <span>View
-							Transaction</span>
+				<li><a  class="active"
+					th:href="@{/company/{id}/transactions/list(id=${company.id})}">
+						<i class="fas fa-list-alt"></i> <span>View Transaction</span>
 				</a></li>
-				
-				<li><a href="/admin/profile"> <i class="fas fa-home"></i>
-						<span>Go To Main Page</span>
+				 <li><a th:href="@{/company/{id}/change-password(id=${company.id})}"> <i class="fas fa-key"></i>
+						<span>Change Password</span>
+				</a></li>
+				<li><a href="/logout"> <i class="fas fa-sign-out-alt"></i>
+						<span>Logout</span>
 				</a></li>
 			</ul>
 
@@ -63,7 +70,7 @@
 			<section class="recent-activity">
 				<h3 th:text="${company.name + ' Transactions'}">Transactions</h3>
 			<div class="action-buttons">
-			<a th:href="@{/admin/companies/{id}/transactions/new(id=${company.id})}" ><button class="btn btn-secondary">Record New Deposit</button></a>
+			<a th:href="@{/company/{id}/transactions/new(id=${company.id})}" ><button class="btn btn-secondary">Record New Deposit</button></a>
 				
 			</div>
 			<br>
@@ -74,7 +81,7 @@
 								<th>Date</th>
 								<th>Description</th>
 								<th>Amount</th>
-								<th>Action</th>
+								<th  th:unless="${user.role == 'ROLE_USER'}">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,9 +92,9 @@
 								<td th:text="${transaction.description}"></td>
 								<td
 									th:text="${'रु .' + #numbers.formatDecimal(transaction.amount, 1, 2)}"></td>
-								<td><a th:href="@{'/admin/companies/' + ${company.id} + '/transactions/edit?id=' + ${transaction.id}}"
+								<td  th:unless="${user.role == 'ROLE_USER'}"><a th:href="@{'/company/' + ${company.id} + '/transactions/edit?id=' + ${transaction.id}}"
 									class="download-edit"> <i class="fas fa-edit"></i> Edit
-								</a> <a th:href="@{'/admin/companies/' + ${company.id} + '/transactions/delete?id=' + ${transaction.id}}" class="delete-btn"		onclick="return confirm('Are you sure you want to delete this record?');">
+								</a> <a th:href="@{'/company/' + ${company.id} + '/transactions/delete?id=' + ${transaction.id}}" class="delete-btn"		onclick="return confirm('Are you sure you want to delete this record?');">
 										<i class="fas fa-trash"></i> Delete
 								</a></td>
 							</tr>

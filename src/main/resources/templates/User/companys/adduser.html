@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add New User</title>
+<title th:text="${company.name + ' Dashboard'}"></title>
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
 	rel="stylesheet">
@@ -244,32 +244,48 @@ label {
 </head>
 <body>
 	<div class="app-container">
+		<!-- Sidebar -->
 		<aside class="sidebar">
 			<div class="logo">
 				<i class="fas fa-microchip"></i>
 				<!-- For technology -->
 				<div class="logo-text">
-					<h1>Main Admin</h1>
+					<h1>[[${company.name}]]</h1>
 					<p>The Best Tech Startup</p>
 				</div>
 			</div>
 			<ul class="nav-menu">
-				<li><a href="/admin/profile"><i
-						class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-				<li><a href="/admin/add-new-user" class="active"><i
-						class="fas fa-add"></i> <span>Add Users</span></a></li>
-				<li><a href="/admin/view-user-list"><i class="fas fa-users"></i>
-						<span>View Users</span></a></li>
-				<li><a href="/admin/company/list"><i class="fas fa-robot"></i>
-						<span>Company</span></a></li>
-				<li><a href="/admin/change-password" > <i class="fas fa-key"></i>
-						<span>Change Password</span>
+				<li><a th:href="@{/company/dashboard/{id}(id=${company.id})}">
+						<i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
 				</a></li>
-
-				<li><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+				<li th:unless="${user.role == 'ROLE_USER'}"><a class="active"
+					th:href="@{/company/{companyId}/company-user(companyId=${company.id})}">
+						<i class="fas fa-user-plus"></i> <span>Add Sub-Admin</span>
+				</a></li>
+				<li><a
+					th:href="@{/company/{companyId}/company-user-list(companyId=${company.id})}"
+					href="/company/company-user-list"
+					th:unless="${user.role == 'ROLE_USER'}"> <i
+						class="fas fa-users-cog"></i> <span>View Sub-Admin</span>
+				</a></li>
+				<li><a
+					th:href="@{/company/{id}/transactions/new(id=${company.id})}">
+						<i class="fas fa-plus-circle"></i> <span>Add Transaction</span>
+				</a></li>
+				<li><a
+					th:href="@{/company/{id}/transactions/list(id=${company.id})}">
+						<i class="fas fa-list-alt"></i> <span>View Transaction</span>
+				</a></li>
+				<li><a
+					th:href="@{/company/{id}/change-password(id=${company.id})}"> <i
+						class="fas fa-key"></i> <span>Change Password</span>
+				</a></li>
+				<li><a href="/logout"> <i class="fas fa-sign-out-alt"></i>
+						<span>Logout</span>
+				</a></li>
 			</ul>
-		</aside>
 
+		</aside>
 
 		<!-- Main Content -->
 		<main class="main-content">
@@ -282,8 +298,11 @@ label {
 					<h3 class="card-title">User Information</h3>
 				</div>
 
-				<form action="/admin/add-new-user" method="post"
-					class="form-container">
+				<form
+					th:action="@{/company/{id}/company-user(id=${company.id})}"
+					method="post" class="form-container">
+					<input type="hidden" name="companyId" th:value="${company.id}" />
+
 					<div class="form-row">
 						<!-- Column 1 -->
 						<div class="form-col">
@@ -329,7 +348,6 @@ label {
 								<label for="role">User Role</label> <select id="role"
 									name="role" class="form-control" required>
 									<option value="" disabled selected>Select a role</option>
-									<option value="ROLE_MAIN_ADMIN">MAIN ADMIN</option>
 									<option value="ROLE_ADMIN">Admin</option>
 									<option value="ROLE_USER">Sub-Admin</option>
 
@@ -339,16 +357,7 @@ label {
 
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="company">Assign Company / Profile</label> <select
-							id="company" name="companyId" class="form-control" required>
-							<option value="" disabled selected>Select Company</option>
-							<th:block th:each="company : ${companys}">
-								<option th:value="${company.id}" th:text="${company.name}"></option>
-							</th:block>
-						</select>
 
-					</div>
 
 
 					<div class="form-row">

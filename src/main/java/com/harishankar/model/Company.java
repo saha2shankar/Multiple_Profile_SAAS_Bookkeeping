@@ -20,8 +20,10 @@ public class Company {
     
     private String name;
     
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    
+    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
     private List<Transaction> transactions;
+    
     
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<User> users;

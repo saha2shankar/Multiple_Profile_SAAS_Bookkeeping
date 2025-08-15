@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User List</title>
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
 	rel="stylesheet">
@@ -73,25 +74,46 @@ keyframes fadeOut {to { opacity:0;
 </head>
 <body>
 	<div class="app-container">
+		<!-- Sidebar -->
 		<aside class="sidebar">
-		            <div class="logo">
-                <i class="fas fa-microchip"></i>   <!-- For technology -->
-                <div class="logo-text">
-                    <h1>Main Admin</h1>
-                    <p>The Best Tech Startup</p>
-                </div>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="/admin/profile"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-                <li><a href="/admin/add-new-user"><i class="fas fa-add"></i> <span>Add Users</span></a></li>
-                <li><a href="/admin/view-user-list"  class="active"><i class="fas fa-users"></i> <span>View Users</span></a></li>
-                <li><a href="/admin/company/list"><i class="fas fa-robot"></i> <span>Company</span></a></li>
-                <li><a href="/admin/change-password" > <i class="fas fa-key"></i>
-						<span>Change Password</span>
+			<div class="logo">
+				<i class="fas fa-microchip"></i>
+				<div class="logo-text">
+					<h1 th:text="${session.company.name}">Company Name</h1>
+					<p>The Best Tech Startup</p>
+				</div>
+			</div>
+
+			<ul class="nav-menu">
+				<li><a
+					th:href="@{/admin/company/dashboard/{id}(id=${session.company.id})}">
+						<i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
 				</a></li>
-                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
-            </ul>
+				<li><a
+					th:href="@{/admin/companies/{id}/company-user(id=${session.company.id})}">
+						<i class="fas fa-user-plus"></i> <span>Add User</span>
+				</a></li>
+				<li><a
+					th:href="@{/admin/companies/{id}/company-user-list(id=${session.company.id})}"
+					class="active"> <i class="fas fa-users-cog"></i> <span>View
+							User</span>
+				</a></li>
+				<li><a
+					th:href="@{/admin/companies/{id}/transactions/new(id=${session.company.id})}">
+						<i class="fas fa-plus-circle"></i> <span>Add Transaction</span>
+				</a></li>
+				<li><a
+					th:href="@{/admin/companies/{id}/transactions/list(id=${session.company.id})}">
+						<i class="fas fa-list-alt"></i> <span>View Transaction</span>
+				</a></li>
+
+				<li><a th:href="@{/admin/profile}"> <i class="fas fa-home"></i>
+						<span>Go To Main Page</span>
+				</a></li>
+			</ul>
 		</aside>
+
+
 
 		<!-- Main Content -->
 		<main class="main-content">
@@ -117,7 +139,8 @@ keyframes fadeOut {to { opacity:0;
 			</section>
 			<!-- Action Buttons -->
 			<div class="action-buttons">
-				<a href="/admin/add-new-user">
+				<a
+					th:href="@{/admin/companies/{id}/company-user(id=${session.company.id})}">
 					<button class="btn btn-secendary">+ ADD NEW USER</button>
 
 				</a>
@@ -144,20 +167,23 @@ keyframes fadeOut {to { opacity:0;
 								<td th:text="${u.id}">uid</td>
 								<td th:text="${u.name}">uid</td>
 								<td
-									th:text="${u.role == 'ROLE_MAIN_ADMIN' ? 'MAIN ADMIN' : (u.role == 'ROLE_ADMIN' ? 'ADMIN' : 'SUB ADMIN')}"
-									th:style="${u.role == 'ROLE_MAIN_ADMIN' ? 'color:orangered;font-weight:bold;' : (u.role == 'ROLE_ADMIN' ? 'color:green;font-weight:bold;' : 'color:blue;font-weight:bold;')}">
+									th:text="${u.role == 'ROLE_USER' ? 'SUB ADMIN' 
+        : (u.role == 'ROLE_ADMIN' ? 'ADMIN' : 'MAIN ADMIN')}"
+									th:style="${u.role == 'ROLE_USER' ? 'color:blue;font-weight:bold;' 
+        : (u.role == 'ROLE_ADMIN' ? 'color:orange;font-weight:bold;' : 'color:green;font-weight:bold;')}">
 								</td>
 
 								<td th:text="${u.email}">uid</td>
 								<td th:text="${u.mobileNo}">uid</td>
-
-								<td><a th:href="@{/admin/edit/user(id=${u.id})}"
+								<td><a
+									th:href="@{/admin/companies/{companyId}/company-edit/user(companyId=${u.company.id}, id=${u.id})}"
 									class="download-edit"> <i class="fas fa-edit"></i> Edit
-								</a> | <a th:href="@{/admin/delete(id=${u.id})}" class="delete-btn"
+								</a> | <a
+									th:href="@{/admin/companies/{companyId}/company-delete-user(companyId=${u.company.id}, id=${u.id})}"
+									class="delete-btn"
 									onclick="return confirm('Are you sure you want to delete this record?');">
 										<i class="fas fa-trash"></i> Delete
 								</a></td>
-
 							</tr>
 
 						</tbody>
@@ -165,31 +191,9 @@ keyframes fadeOut {to { opacity:0;
 				</div>
 			</section>
 
-<div id="toast" 
-     style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
-</div>
+
 		</main>
 	</div>
-	
-	<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const message = /*[[${successMessage}]]*/ '';
-        if (message && message.trim().length > 0) {
-            const toast = document.createElement('div');
-            toast.textContent = message;
-            toast.style.background = "#28a745";
-            toast.style.color = "white";
-            toast.style.padding = "10px 20px";
-            toast.style.borderRadius = "5px";
-            toast.style.boxShadow = "0px 2px 10px rgba(0,0,0,0.3)";
-            document.getElementById("toast").appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000); // Auto hide in 3s
-        }
-    });
-</script>
 	<script type="js/main.js"></script>
 </body>
 </html>

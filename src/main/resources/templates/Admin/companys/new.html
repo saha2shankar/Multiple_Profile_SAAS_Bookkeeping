@@ -245,25 +245,24 @@ label {
 </head>
 <body>
 	<div class="app-container">
-		<!-- Sidebar -->
-	<!-- Sidebar -->
+			<!-- Sidebar -->
 		<aside class="sidebar">
 			<div class="logo">
 				<i class="fas fa-microchip"></i>
 				<!-- For technology -->
 				<div class="logo-text">
-					<h1>My Code</h1>
+					<h1>[[${company.name}]]</h1>
 					<p>The Best Tech Startup</p>
 				</div>
 			</div>
 			<ul class="nav-menu">
-				<li><a href="#"> <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+				<li><a th:href="@{/admin/company/dashboard/{id}(id=${company.id})}"> <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
 				</a></li>
-				<li><a href="/admin/company/users/new"> <i
-						class="fas fa-user-plus"></i> <span>Add Sub-Admin</span>
+	<li><a th:href="@{/admin/companies/{id}/company-user(id=${company.id})}"> <i
+						class="fas fa-user-plus"></i> <span>Add User</span>
 				</a></li>
-				<li><a href="/admin/company/users/view"> <i
-						class="fas fa-users-cog"></i> <span>View Sub-Admin</span>
+				<li><a th:href="@{/admin/companies/{id}/company-user-list(id=${company.id})}"> <i
+						class="fas fa-users-cog"></i> <span>View User</span>
 				</a></li>
 				<li><a
 					th:href="@{/admin/companies/{id}/transactions/new(id=${company.id})}" class="active">
@@ -274,12 +273,14 @@ label {
 					> <i class="fas fa-list-alt"></i> <span>View
 							Transaction</span>
 				</a></li>
+				
 				<li><a href="/admin/profile"> <i class="fas fa-home"></i>
 						<span>Go To Main Page</span>
 				</a></li>
 			</ul>
 
 		</aside>
+
 
 
 		<!-- Main Content -->
@@ -309,7 +310,8 @@ label {
 								<div class="input-with-icon">
 									<i class="fas fa-user input-icon"></i> <input type="text"
 										id="description" th:field="*{description}"class="form-control"
-										placeholder="This is demo placeholder" required>
+										               placeholder="Enter transaction notes, e.g. Payment for invoice #123"
+ required>
 								</div>
 							</div>
 
@@ -335,7 +337,7 @@ label {
 
 							<!-- Role -->
 							<div class="form-group">
-								<label for="">Payment Type</label> <select id="role"
+								<label for="paymentType">Payment Type</label> <select id="paymentType" name="paymentType"
 									 class="form-control" required>
 									<option value="" disabled selected>Select a payment type</option>
 									<option value="online">Online</option>

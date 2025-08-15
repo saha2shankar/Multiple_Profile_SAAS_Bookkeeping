@@ -48,8 +48,8 @@ public class SecurityConfig {
 		 * .defaultSuccessUrl("/user/profile").permitAll();
 		 */
 		http.csrf().disable()
-		.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER")
-		.requestMatchers("/admin/**").hasRole("ADMIN")
+		.authorizeHttpRequests().requestMatchers("/company/**").hasAnyRole("USER", "ADMIN")
+		.requestMatchers("/admin/**").hasRole("MAIN_ADMIN")
 		.requestMatchers("/**").permitAll().and()
 		.formLogin().loginPage("/signin").loginProcessingUrl("/userLogin")
 		.successHandler(sucessHandler)

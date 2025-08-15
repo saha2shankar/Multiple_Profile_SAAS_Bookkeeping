@@ -119,5 +119,18 @@ public class TransactionServiceImpl implements TransactionService {
 	        return amount != null ? amount : 0.0;
 	   
 	}
+	
+	@Override
+	public Double getTotalAmount() {
+        Double total = transactionRepository.getTotalAmount();
+        return total != null ? total : 0.0; // Handle null if no records
+    }
+
+	@Override
+	public List<Transaction> getRecentTransaction() {
+		 Pageable topFive = PageRequest.of(0, 5);
+	        return transactionRepository.findRecentTransaction(topFive);
+	
+	}
 
 }

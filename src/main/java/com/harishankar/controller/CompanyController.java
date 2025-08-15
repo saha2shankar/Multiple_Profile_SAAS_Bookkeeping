@@ -60,8 +60,10 @@ public class CompanyController {
 	}
 
     @GetMapping("/dashboard/{id}")
-    public String showDashboard(@PathVariable Long id, Model model) {
+    public String showDashboard(@PathVariable Long id, Model model, HttpSession session) {
         Company company = companyService.getCompanyById(id);
+        
+        session.setAttribute("company", company);
         
         // Transaction statistics
         model.addAttribute("company", company);
@@ -122,4 +124,13 @@ public class CompanyController {
                               "July", "August", "September", "October", "November", "December"};
         return monthNames[month - 1];
     }
+    
+    
+	
+	@GetMapping("/change-password")
+	public String changepasswordform() {
+		return "Admin/companys/passwordchange";
+	}
+	
+	
 }

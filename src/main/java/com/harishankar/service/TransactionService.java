@@ -36,5 +36,10 @@ public interface TransactionService {
 	public List<Object[]> getMonthlyTransactionData(Company company);
 
 	public Map<LocalDate, Double> getDailyTransactionsLast30Days(Company company);
+	
+	public Double getTotalAmount();
+	
+	public List<Transaction> getRecentTransaction();
+
 
 }

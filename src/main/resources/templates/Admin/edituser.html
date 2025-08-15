@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add New User | Nepal Bank Limited</title>
+<title>Edit Users</title>
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
 	rel="stylesheet">
@@ -245,9 +245,24 @@ label {
 </head>
 <body>
 	<div class="app-container">
-		<!-- Sidebar -->
 		<aside class="sidebar">
-			<th:block th:insert="fragments/sidebar.html"></th:block>
+		            <div class="logo">
+                <i class="fas fa-microchip"></i>   <!-- For technology -->
+                <div class="logo-text">
+                    <h1>Main Admin</h1>
+                    <p>The Best Tech Startup</p>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/admin/profile"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="/admin/add-new-user"><i class="fas fa-add"></i> <span>Add Users</span></a></li>
+                <li><a href="/admin/view-user-list"  class="active"><i class="fas fa-users"></i> <span>View Users</span></a></li>
+                <li><a href="/admin/company/list"><i class="fas fa-robot"></i> <span>Company</span></a></li>
+                <li><a  href="/admin/change-password" > <i class="fas fa-key"></i>
+						<span>Change Password</span>
+				</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
 		</aside>
 
 		<!-- Main Content -->
@@ -305,7 +320,8 @@ label {
 								
 									th:field="*{role}"class="form-control" required>
 									<option value="" disabled selected>Select a role</option>
-									<option value="ROLE_ADMIN">Administrator</option>
+									<option value="ROLE_MAIN_ADMIN">MAIN Administrator</option>
+										<option value="ROLE_ADMIN">Administrator</option>
 									<option value="ROLE_USER">Sub Admin</option>
 
 								</select>
